@@ -13,9 +13,20 @@ Run `setup.sh` from the root of this repository to create a new Cargo project fo
 ### Example
 
 ```
-. ./setup.sh 1
+$ . ./setup.sh 1
 ```
 
 This will create a new Cargo project called `day_01`, and place the input for the day in a file called `input.txt` in the `day_01` directory.
 
 It will also subsequently open the newly-created project directory in VS Code.
+
+## Running
+
+In order to run the solution for a given day, `cd` into the directory for the day and `cargo run`, passing it the folder's `input.txt`.
+
+### Example
+
+```
+$ cd day_01/
+$ cargo run --release < input.txt
+```
