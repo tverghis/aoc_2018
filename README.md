@@ -16,7 +16,7 @@ Run `setup.sh` from the root of this repository to create a new Cargo project fo
 $ . ./setup.sh 1
 ```
 
-This will create a new Cargo project called `day_01`, and place the input for the day in a file called `input.txt` in the `day_01` directory.
+This will create a new Cargo project called `day_01`, and place the input for the day in a file called `input.txt` in the `day_01` directory. Additionally, it will create a blank (`.gitignore`d) file called `sample_input.txt`, that I typically use for testing the examples from the problem itself.
 
 It will also subsequently open the newly-created project directory in VS Code.
 
