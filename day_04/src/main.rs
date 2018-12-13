@@ -13,6 +13,7 @@ struct ActivitySummary {
     id: GuardId,
     total_mins_sleep: u32,
     max_freq_sleep_min: u8,
+    max_frequency: u32,
 }
 
 fn main() {
@@ -23,6 +24,7 @@ fn main() {
     let analyzed_input = analyze_sequence(&sequence);
 
     println!("{}", part1(&analyzed_input));
+    println!("{}", part2(&analyzed_input));
 }
 
 fn parse_input(input: &str) -> Vec<Activity> {
@@ -79,7 +81,7 @@ fn part1(table: &ActivityTable) -> u32 {
     let mut current_most_asleep: Option<ActivitySummary> = None;
 
     for id in table.keys() {
-        let summary = compute_record(*id, &table[id]);
+        let summary = compute_summary(*id, &table[id]);
 
         current_most_asleep = match current_most_asleep {
             None => Some(summary),
@@ -98,7 +100,30 @@ fn part1(table: &ActivityTable) -> u32 {
     summary.id * u32::from(summary.max_freq_sleep_min)
 }
 
-fn compute_record(id: GuardId, record: &ActivityRecord) -> ActivitySummary {
+fn part2(table: &ActivityTable) -> u32 {
+    let mut current_most_consistent: Option<ActivitySummary> = None;
+
+    for id in table.keys() {
+        let summary = compute_summary(*id, &table[id]);
+
+        current_most_consistent = match current_most_consistent {
+            None => Some(summary),
+            Some(old_summary) => {
+                if summary.max_frequency > old_summary.max_frequency {
+                    Some(summary)
+                } else {
+                    Some(old_summary)
+                }
+            }
+        }
+    }
+
+    let summary = current_most_consistent.unwrap();
+
+    summary.id * u32::from(summary.max_freq_sleep_min)
+}
+
+fn compute_summary(id: GuardId, record: &ActivityRecord) -> ActivitySummary {
     let mut total_mins_sleep = 0;
     let mut max_freq_sleep_min = 0;
     let mut max_frequency = 0;
@@ -118,5 +143,6 @@ fn compute_record(id: GuardId, record: &ActivityRecord) -> ActivitySummary {
         id,
         total_mins_sleep,
         max_freq_sleep_min,
+        max_frequency,
     }
 }
