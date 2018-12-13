@@ -22,9 +22,10 @@ fn main() {
 
     let sequence = parse_input(&input);
     let analyzed_input = analyze_sequence(&sequence);
+    let summaries = compute_summaries(&analyzed_input);
 
-    println!("{}", part1(&analyzed_input));
-    println!("{}", part2(&analyzed_input));
+    println!("{}", part1(&summaries));
+    println!("{}", part2(&summaries));
 }
 
 fn parse_input(input: &str) -> Vec<Activity> {
@@ -77,50 +78,29 @@ fn analyze_sequence(sequence: &[Activity]) -> ActivityTable {
     table
 }
 
-fn part1(table: &ActivityTable) -> u32 {
-    let mut current_most_asleep: Option<ActivitySummary> = None;
-
-    for id in table.keys() {
-        let summary = compute_summary(*id, &table[id]);
-
-        current_most_asleep = match current_most_asleep {
-            None => Some(summary),
-            Some(old_summary) => {
-                if summary.total_mins_sleep > old_summary.total_mins_sleep {
-                    Some(summary)
-                } else {
-                    Some(old_summary)
-                }
-            }
-        }
-    }
-
-    let summary = current_most_asleep.unwrap();
+fn part1(summaries: &[ActivitySummary]) -> u32 {
+    let summary = summaries
+        .iter()
+        .max_by(|x, y| x.total_mins_sleep.cmp(&y.total_mins_sleep))
+        .unwrap();
 
     summary.id * u32::from(summary.max_freq_sleep_min)
 }
 
-fn part2(table: &ActivityTable) -> u32 {
-    let mut current_most_consistent: Option<ActivitySummary> = None;
-
-    for id in table.keys() {
-        let summary = compute_summary(*id, &table[id]);
-
-        current_most_consistent = match current_most_consistent {
-            None => Some(summary),
-            Some(old_summary) => {
-                if summary.max_frequency > old_summary.max_frequency {
-                    Some(summary)
-                } else {
-                    Some(old_summary)
-                }
-            }
-        }
-    }
-
-    let summary = current_most_consistent.unwrap();
+fn part2(summaries: &[ActivitySummary]) -> u32 {
+    let summary = summaries
+        .iter()
+        .max_by(|x, y| x.max_frequency.cmp(&y.max_frequency))
+        .unwrap();
 
     summary.id * u32::from(summary.max_freq_sleep_min)
+}
+
+fn compute_summaries(table: &ActivityTable) -> Vec<ActivitySummary> {
+    table
+        .iter()
+        .map(|(id, activity_record)| compute_summary(*id, activity_record))
+        .collect()
 }
 
 fn compute_summary(id: GuardId, record: &ActivityRecord) -> ActivitySummary {
