@@ -28,7 +28,7 @@ fn part1(input: &str) -> usize {
 }
 
 fn part2(input: &str) -> usize {
-    (b'A'..b'Z')
+    (b'A'..=b'Z')
         .map(|b| chain_react(input, ExclusionUnit::Unit(b)))
         .min()
         .unwrap()
